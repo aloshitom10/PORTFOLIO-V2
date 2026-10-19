@@ -883,21 +883,6 @@ figure {
   color: var(--accent);
 }
 
-/* ─── Toolbox: typewriter heading ─────────────────────────────────────────── */
-.toolbox-typewriter {
-  position: relative;
-  display: inline;
-}
-
-.typewriter-cursor {
-  display: inline-block;
-  margin-left: 0.05em;
-  color: var(--accent);
-  font-weight: 300;
-  transition: opacity 80ms ease;
-  user-select: none;
-}
-
 /* ─── Toolbox: skill-chip stagger entrance ─────────────────────────────────── */
 .skill-chip {
   opacity: 0;

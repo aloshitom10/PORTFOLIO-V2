@@ -1,52 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-const WORDS = ["Tools for the work.", "Built to ship.", "Stack of choice.", "Ready to build."];
-const TYPING_SPEED = 68;
-const DELETING_SPEED = 38;
-const PAUSE_AFTER_TYPE = 1800;
-const PAUSE_AFTER_DELETE = 400;
-
-function useTypewriter(words: string[]) {
-  const [display, setDisplay] = useState(words[0]);
-  const [wordIdx, setWordIdx] = useState(0);
-  const [charIdx, setCharIdx] = useState(words[0].length);
-  const [deleting, setDeleting] = useState(false);
-  const [cursorVisible, setCursorVisible] = useState(true);
-
-  // Cursor blink
-  useEffect(() => {
-    const id = setInterval(() => setCursorVisible((v) => !v), 530);
-    return () => clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const word = words[wordIdx];
-    let timeout: ReturnType<typeof setTimeout>;
-
-    if (!deleting && charIdx === word.length) {
-      timeout = setTimeout(() => setDeleting(true), PAUSE_AFTER_TYPE);
-    } else if (deleting && charIdx === 0) {
-      timeout = setTimeout(() => {
-        setDeleting(false);
-        setWordIdx((i) => (i + 1) % words.length);
-      }, PAUSE_AFTER_DELETE);
-    } else {
-      timeout = setTimeout(
-        () => {
-          const next = deleting ? charIdx - 1 : charIdx + 1;
-          setCharIdx(next);
-          setDisplay(words[wordIdx].slice(0, next));
-        },
-        deleting ? DELETING_SPEED : TYPING_SPEED,
-      );
-    }
-    return () => clearTimeout(timeout);
-  }, [words, wordIdx, charIdx, deleting]);
-
-  return { display, cursorVisible };
-}
+import { useEffect, useRef } from "react";
 
 interface Group {
   title: string;
@@ -54,7 +8,6 @@ interface Group {
 }
 
 export function ToolboxClient({ groups }: { groups: Group[] }) {
-  const { display, cursorVisible } = useTypewriter(WORDS);
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Track pointer position for radial glow on each skill-group
@@ -107,12 +60,7 @@ export function ToolboxClient({ groups }: { groups: Group[] }) {
       <div className="section-heading" data-reveal>
         <p className="section-index mono">03 / Technical arsenal</p>
         <div>
-          <h2 id="skills-heading" className="toolbox-typewriter" aria-label="Tools for the work.">
-            {display}
-            <span className="typewriter-cursor" aria-hidden="true" style={{ opacity: cursorVisible ? 1 : 0 }}>
-              |
-            </span>
-          </h2>
+          <h2 id="skills-heading">Tools for the work.</h2>
           <p className="section-subtitle">
             Programming, frameworks, design, tools, and computer science foundations.
           </p>
