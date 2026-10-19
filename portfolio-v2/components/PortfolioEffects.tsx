@@ -9,22 +9,12 @@ export function PortfolioEffects() {
 
     // ── Page-enter animation ──────────────────────────────────────────────────
     const curtain = document.querySelector<HTMLElement>(".page-curtain");
-    if (curtain && !reducedMotion.matches) {
-      // Force the curtain to be visible before rAF fires
-      curtain.style.opacity = "1";
-      // Next frame: trigger the fade-out
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          curtain.classList.add("page-curtain--gone");
-          curtain.addEventListener(
-            "transitionend",
-            () => curtain.remove(),
-            { once: true },
-          );
-        });
-      });
-    } else {
-      curtain?.remove();
+    if (curtain) {
+      if (reducedMotion.matches) {
+        curtain.remove();
+      } else {
+        curtain.addEventListener("animationend", () => curtain.remove(), { once: true });
+      }
     }
     // ─────────────────────────────────────────────────────────────────────────
     const progressBar = document.querySelector<HTMLElement>(".scroll-progress");
