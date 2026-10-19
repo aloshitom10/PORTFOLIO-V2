@@ -6,6 +6,27 @@ export function PortfolioEffects() {
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // ── Page-enter animation ──────────────────────────────────────────────────
+    const curtain = document.querySelector<HTMLElement>(".page-curtain");
+    if (curtain && !reducedMotion.matches) {
+      // Force the curtain to be visible before rAF fires
+      curtain.style.opacity = "1";
+      // Next frame: trigger the fade-out
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          curtain.classList.add("page-curtain--gone");
+          curtain.addEventListener(
+            "transitionend",
+            () => curtain.remove(),
+            { once: true },
+          );
+        });
+      });
+    } else {
+      curtain?.remove();
+    }
+    // ─────────────────────────────────────────────────────────────────────────
     const progressBar = document.querySelector<HTMLElement>(".scroll-progress");
     const cursorDot = document.querySelector<HTMLElement>(".cursor-dot");
     const cursorRing = document.querySelector<HTMLElement>(".cursor-ring");
@@ -114,6 +135,7 @@ export function PortfolioEffects() {
 
   return (
     <>
+      <div className="page-curtain" aria-hidden="true" />
       <div className="scroll-progress" aria-hidden="true" />
       <div className="cursor-dot" aria-hidden="true" />
       <div className="cursor-ring" aria-hidden="true" />
