@@ -364,22 +364,6 @@ figure {
   font-size: 0.62rem;
 }
 
-/* ── Page-enter curtain ──────────────────────────────────────────────────── */
-@keyframes curtain-lift {
-  0%   { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.page-curtain {
-  position: fixed;
-  z-index: 200;
-  inset: 0;
-  background: var(--bg);
-  opacity: 0;
-  pointer-events: none;
-  animation: curtain-lift 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both reverse;
-}
-
 .scroll-progress {
   position: fixed;
   z-index: 50;
@@ -1462,8 +1446,4 @@ figure {
     transition: none;
   }
 
-  .page-curtain {
-    animation: none;
-    opacity: 0;
-  }
 }

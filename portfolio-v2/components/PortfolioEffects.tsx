@@ -7,16 +7,6 @@ export function PortfolioEffects() {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    // ── Page-enter animation ──────────────────────────────────────────────────
-    const curtain = document.querySelector<HTMLElement>(".page-curtain");
-    if (curtain) {
-      if (reducedMotion.matches) {
-        curtain.remove();
-      } else {
-        curtain.addEventListener("animationend", () => curtain.remove(), { once: true });
-      }
-    }
-    // ─────────────────────────────────────────────────────────────────────────
     const progressBar = document.querySelector<HTMLElement>(".scroll-progress");
     const cursorDot = document.querySelector<HTMLElement>(".cursor-dot");
     const cursorRing = document.querySelector<HTMLElement>(".cursor-ring");
@@ -125,7 +115,6 @@ export function PortfolioEffects() {
 
   return (
     <>
-      <div className="page-curtain" aria-hidden="true" />
       <div className="scroll-progress" aria-hidden="true" />
       <div className="cursor-dot" aria-hidden="true" />
       <div className="cursor-ring" aria-hidden="true" />
