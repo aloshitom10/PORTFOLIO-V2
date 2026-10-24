@@ -138,15 +138,19 @@ export const site = {
     groups: [
       {
         title: "Programming Languages",
-        skills: ["Python", "Java", "C", "JavaScript"],
+        skills: ["Python", "JavaScript", "Java", "C"],
       },
       {
         title: "Frameworks & Libraries",
-        skills: ["Django", "React.js", "Node.js", "Express.js", "MongoDB"],
+        skills: ["Django", "React.js", "Node.js", "Express.js", "Bootstrap"],
       },
       {
-        title: "Web Development & Design",
-        skills: ["HTML5", "CSS3", "Bootstrap", "Figma", "UI/UX Design"],
+        title: "Databases",
+        skills: ["MongoDB", "PostgreSQL", "SQLite"],
+      },
+      {
+        title: "Web & UI",
+        skills: ["HTML5", "CSS3", "Tailwind CSS", "Figma", "UI/UX Design"],
       },
       {
         title: "Developer Tools",
@@ -163,19 +167,19 @@ export const site = {
       title: "MERN Stack Development",
       organization: "Techmaghi",
       date: "October 2026",
-      detail: "Completed October 2026. Topics: MongoDB, Express.js, React.js, and Node.js.",
+      detail: "Topics: MongoDB, Express.js, React.js, and Node.js.",
     },
     {
       title: "Network Fundamentals",
       organization: "Infosys Springboard",
       date: "September 2026",
-      detail: "Completed September 2026. Topics: Network fundamentals.",
+      detail: "Topics: Network fundamentals.",
     },
     {
       title: "Java Programming Essentials",
       organization: "Techmaghi",
       date: "December 2025",
-      detail: "Completed December 2025. Topics: Java fundamentals and object-oriented programming.",
+      detail: "Topics: Java fundamentals and object-oriented programming.",
     },
   ],
 };

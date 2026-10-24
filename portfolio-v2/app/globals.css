@@ -426,6 +426,12 @@ figure {
   scale: 1;
 }
 
+.cursor-ring.is-hovering {
+  scale: 1.7;
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
 @media (pointer: fine) and (hover: hover) {
   html.has-custom-cursor,
   html.has-custom-cursor a,
@@ -460,10 +466,33 @@ figure {
 .hero {
   flex: 1;
   min-height: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding-block: clamp(2.5rem, 6vh, 4rem) 2rem;
+  isolation: isolate;
+}
+
+/* ─── Ambient glow behind hero title ──────────────────────────────────────── */
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -10%;
+  left: -8%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 45%,
+    color-mix(in srgb, var(--ink) 7%, transparent) 0%,
+    transparent 68%
+  );
+  pointer-events: none;
+  filter: blur(48px);
 }
 
 .hero__availability {
@@ -658,6 +687,11 @@ figure {
   font-size: 0.76rem;
 }
 
+/* ─── Section index counter ─────────────────────────────────────────────────── */
+.section-index[data-count] {
+  font-variant-numeric: tabular-nums;
+}
+
 .section-heading h2 {
   max-width: 14ch;
   font-size: clamp(2.6rem, 7vw, 5.8rem);
@@ -773,6 +807,17 @@ figure {
   background: var(--accent);
   box-shadow: 0 0 0 5px var(--bg);
   content: "";
+}
+
+/* ─── Timeline dot pulse on first visible item ─────────────────────────────── */
+@keyframes timeline-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent), 0 0 0 5px var(--bg); }
+  60%  { box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent), 0 0 0 5px var(--bg); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent), 0 0 0 5px var(--bg); }
+}
+
+.timeline-item:first-child::before {
+  animation: timeline-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .timeline-meta {
@@ -1160,6 +1205,14 @@ figure {
   padding: 0.8rem 0.85rem;
   background: var(--surface);
   color: var(--ink);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
 }
 
 .field textarea {
@@ -1229,6 +1282,55 @@ figure {
 .has-js [data-reveal].is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.has-js [data-reveal-delay="1"] {
+  transition-delay: 110ms;
+}
+
+.has-js [data-reveal-delay="2"] {
+  transition-delay: 220ms;
+}
+
+.has-js [data-reveal-delay="3"] {
+  transition-delay: 330ms;
+}
+
+/* ─── View transitions ──────────────────────────────────────────────────────── */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: vt-fade-out 220ms ease forwards;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-in 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes vt-fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Ticker pause on hover ─────────────────────────────────────────────────── */
+.ticker:hover .ticker__track {
+  animation-play-state: paused;
+}
+
+/* ─── Magnetic buttons: smooth spring return ───────────────────────────────── */
+.button--primary,
+.header-cta {
+  transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              color 180ms ease,
+              border-color 180ms ease,
+              background-color 180ms ease;
 }
 
 .project-detail {
@@ -1419,6 +1521,19 @@ figure {
   }
 }
 
+/* ─── Staggered sibling reveal delays ──────────────────────────────────────── */
+.timeline-item[data-reveal]:nth-child(2),
+.project-grid [data-reveal]:nth-child(2) { transition-delay: 80ms; }
+
+.timeline-item[data-reveal]:nth-child(3),
+.project-grid [data-reveal]:nth-child(3) { transition-delay: 160ms; }
+
+.timeline-item[data-reveal]:nth-child(4),
+.project-grid [data-reveal]:nth-child(4) { transition-delay: 240ms; }
+
+.timeline-item[data-reveal]:nth-child(5),
+.project-grid [data-reveal]:nth-child(5) { transition-delay: 320ms; }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1446,4 +1561,11 @@ figure {
     transition: none;
   }
 
+  .timeline-item:first-child::before {
+    animation: none;
+  }
+
+  .hero::before {
+    display: none;
+  }
 }

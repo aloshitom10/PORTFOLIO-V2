@@ -24,7 +24,7 @@ export function ContactForm() {
 
     const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
     const body = encodeURIComponent(`${message}\n\n— ${name}\n${email}`);
-    setStatus("Gmail should open with a pre-filled draft. Review it, then send to complete your message.");
+    setStatus("Opening Gmail with a pre-filled draft. Review it, then send.");
     window.open(
       `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(site.identity.email)}&su=${subject}&body=${body}`,
       "_blank",

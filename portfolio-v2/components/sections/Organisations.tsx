@@ -21,7 +21,7 @@ export function Organisations() {
               <span className="timeline-type">{entry.type}</span>
             </div>
             <div className="timeline-content">
-              <h3>{entry.title}, {entry.company}</h3>
+              <h3>{entry.title}</h3>
               <p className="timeline-place">{entry.company}{entry.location ? ` · ${entry.location}` : ""}</p>
               <p className="timeline-description">{entry.description}</p>
             </div>

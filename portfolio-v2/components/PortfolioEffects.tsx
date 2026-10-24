@@ -18,10 +18,8 @@ export function PortfolioEffects() {
     let cursorVisible = false;
     const moveCursor = (event: PointerEvent) => {
       if (!cursorDot || !cursorRing) return;
-      // Dot follows instantly via direct style
       cursorDot.style.setProperty("--cursor-x", `${event.clientX}px`);
       cursorDot.style.setProperty("--cursor-y", `${event.clientY}px`);
-      // Ring follows with CSS transition lag
       cursorRing.style.setProperty("--cursor-x", `${event.clientX}px`);
       cursorRing.style.setProperty("--cursor-y", `${event.clientY}px`);
       if (!cursorVisible) {
@@ -40,6 +38,22 @@ export function PortfolioEffects() {
       cursorRing?.classList.remove("is-visible", "is-settled");
       cursorVisible = false;
     };
+
+    // Cursor ring expand on interactive elements
+    const interactiveEls = document.querySelectorAll<HTMLElement>("a, button, input, textarea, select");
+    const ringHoverCleanup: (() => void)[] = [];
+    if (cursorRing) {
+      interactiveEls.forEach((el) => {
+        const enter = () => cursorRing.classList.add("is-hovering");
+        const leave = () => cursorRing.classList.remove("is-hovering");
+        el.addEventListener("pointerenter", enter);
+        el.addEventListener("pointerleave", leave);
+        ringHoverCleanup.push(() => {
+          el.removeEventListener("pointerenter", enter);
+          el.removeEventListener("pointerleave", leave);
+        });
+      });
+    }
     const onReducedMotionChange = (event: MediaQueryListEvent) => {
       if (event.matches) {
         hideCursor();
@@ -90,8 +104,7 @@ export function PortfolioEffects() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-          } else {
-            entry.target.classList.remove("is-visible");
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -99,8 +112,63 @@ export function PortfolioEffects() {
     );
 
     elements.forEach((element) => observer.observe(element));
+
+    // Section index counter animation
+    const sectionIndexEls = document.querySelectorAll<HTMLElement>(".section-index");
+    const counterObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          const text = el.textContent ?? "";
+          const match = text.match(/^(\d+)/);
+          if (!match) return;
+          const target = parseInt(match[1], 10);
+          const suffix = text.slice(match[0].length);
+          let current = 0;
+          const step = () => {
+            current += 1;
+            el.textContent = String(current).padStart(2, "0") + suffix;
+            if (current < target) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          counterObserver.unobserve(el);
+        });
+      },
+      { threshold: 0.5 },
+    );
+    sectionIndexEls.forEach((el) => counterObserver.observe(el));
+
+    // Magnetic button effect
+    const magneticEls = document.querySelectorAll<HTMLElement>(".button--primary, .header-cta");
+    const magneticCleanup: (() => void)[] = [];
+
+    magneticEls.forEach((el) => {
+      const onMove = (e: PointerEvent) => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) * 0.28;
+        const dy = (e.clientY - cy) * 0.28;
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+      };
+      const onLeave = () => {
+        el.style.transform = "";
+      };
+      el.addEventListener("pointermove", onMove);
+      el.addEventListener("pointerleave", onLeave);
+      magneticCleanup.push(() => {
+        el.removeEventListener("pointermove", onMove);
+        el.removeEventListener("pointerleave", onLeave);
+        el.style.transform = "";
+      });
+    });
+
     return () => {
       observer.disconnect();
+      counterObserver.disconnect();
+      magneticCleanup.forEach((fn) => fn());
+      ringHoverCleanup.forEach((fn) => fn());
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
       if (progressFrame) window.cancelAnimationFrame(progressFrame);

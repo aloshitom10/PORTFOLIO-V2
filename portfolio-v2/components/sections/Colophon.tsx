@@ -7,7 +7,6 @@ export function Colophon() {
         <p className="section-index mono">01 / About</p>
         <div>
           <h2 id="about-heading">Driven by logic.<br />Built for impact.</h2>
-          <p className="section-subtitle">Theory matters most when it turns into working software.</p>
         </div>
       </div>
       <div className="about-grid" data-reveal>

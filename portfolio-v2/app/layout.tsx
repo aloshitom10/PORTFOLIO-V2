@@ -19,6 +19,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://aloshitomshijo.vercel.app"),
   title: "Aloshi | Creative Developer & Digital Creator",
   description:
     "Aloshi Tom Shijo is a Computer Science & Engineering student at SJCET and a full-stack developer working with Python, Django, React.js, Node.js, Express.js, and MongoDB.",

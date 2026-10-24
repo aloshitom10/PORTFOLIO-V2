@@ -92,7 +92,7 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="header-actions">
-            <a className="header-cta" href="#contact">Let’s talk <ArrowUpRight size={15} aria-hidden="true" /></a>
+            <a className="header-cta" href="#contact">Let's talk <ArrowUpRight size={15} aria-hidden="true" /></a>
             <button
               className="mobile-menu-button"
               type="button"
