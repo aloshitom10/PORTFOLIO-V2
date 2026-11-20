@@ -12,6 +12,8 @@ import { Toolbox } from "@/components/sections/Toolbox";
 import { Work } from "@/components/sections/Work";
 import { site } from "@/content/site";
 
+const pagesBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export default function Home() {
   return (
     <>
@@ -62,7 +64,7 @@ export default function Home() {
           <h2>Socials</h2>
           <a href={site.identity.linkedIn} target="_blank" rel="noreferrer">LinkedIn ↗</a>
           <a href={site.identity.github} target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a href="/RESUME_updated.pdf" target="_blank" rel="noreferrer">Resume ↓</a>
+          <a href={`${pagesBasePath}/RESUME_updated.pdf`} target="_blank" rel="noreferrer">Resume ↓</a>
         </div>
         <div className="footer-column">
           <h2>Sitemap</h2>
