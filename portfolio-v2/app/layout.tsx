@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Instrument_Serif, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
+const pagesBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const displayFont = Instrument_Serif({
   variable: "--font-display",
   weight: "400",
@@ -19,7 +21,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aloshitomshijo.vercel.app"),
+  metadataBase: new URL(`${pagesBasePath}/`, "https://aloshitom10.github.io"),
   title: "Aloshi | Creative Developer & Digital Creator",
   description:
     "Aloshi Tom Shijo is a Computer Science & Engineering student at SJCET and a full-stack developer working with Python, Django, React.js, Node.js, Express.js, and MongoDB.",
