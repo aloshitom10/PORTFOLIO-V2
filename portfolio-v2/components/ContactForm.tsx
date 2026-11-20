@@ -1,11 +1,12 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 
 import { site } from "@/content/site";
 
 export function ContactForm() {
   const [status, setStatus] = useState("");
+  const [draft, setDraft] = useState<{ gmailUrl: string; mailtoUrl: string } | null>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -18,22 +19,38 @@ export function ContactForm() {
     const message = String(data.get("message") ?? "").trim();
 
     if (!name || !email || !message) {
+      setDraft(null);
       setStatus("Please complete every field.");
       return;
     }
 
-    const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-    const body = encodeURIComponent(`${message}\n\n— ${name}\n${email}`);
-    setStatus("Opening Gmail with a pre-filled draft. Review it, then send.");
-    window.open(
-      `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(site.identity.email)}&su=${subject}&body=${body}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
+    const subject = `Portfolio inquiry from ${name}`;
+    const body = `${message}\n\n— ${name}\n${email}`;
+    const gmailParams = new URLSearchParams({
+      view: "cm",
+      fs: "1",
+      to: site.identity.email,
+      su: subject,
+      body,
+    });
+    const mailtoParams = new URLSearchParams({ subject, body });
+
+    setDraft({
+      gmailUrl: `https://mail.google.com/mail/?${gmailParams.toString()}`,
+      mailtoUrl: `mailto:${site.identity.email}?${mailtoParams.toString()}`,
+    });
+    setStatus("Your message is ready. Choose where to open it, then send it from your email app.");
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
+    <form
+      className="contact-form"
+      onSubmit={handleSubmit}
+      onChange={() => {
+        setDraft(null);
+        setStatus("");
+      }}
+    >
       <div className="field">
         <label htmlFor="contact-name">Your name</label>
         <input id="contact-name" name="name" autoComplete="name" required maxLength={100} placeholder="Name" />
@@ -48,7 +65,14 @@ export function ContactForm() {
       </div>
       <div>
         <button type="submit" className="button button--primary">Prepare email <span aria-hidden="true">↗</span></button>
+        <p className="form-hint">This prepares an email draft; it won’t send until you press Send in your email app.</p>
         <p className="form-status" role="status" aria-live="polite">{status}</p>
+        {draft && (
+          <div className="contact-draft-links">
+            <a className="button button--secondary" href={draft.gmailUrl} target="_blank" rel="noreferrer">Open Gmail draft</a>
+            <a className="button button--secondary" href={draft.mailtoUrl}>Open email app</a>
+          </div>
+        )}
       </div>
     </form>
   );
